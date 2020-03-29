@@ -1,76 +1,41 @@
-let mic;
-let meter;
+/*
+	Check it out:
+	https://p5js.org/examples/sound-mic-input.html
+*/
 
-// Create a new canvas to the browser size
-function setup () {
-  createCanvas(windowWidth, windowHeight);
+var mic;
+var sensibility;
 
-  // The audio meter
-  meter = new Tone.Meter();
+function setup() {
+  createCanvas(320, 450);
+
+	sensibility=4;
+	
+  // Crea el Audio input
+  mic = new p5.AudioIn();
+	//Inicia el Audio Input
+  mic.start();
 }
 
-// On window resize, update the canvas size
-function windowResized () {
-  resizeCanvas(windowWidth, windowHeight);
-}
-
-// Render loop that draws shapes with p5
 function draw() {
-  // For consistent sizing regardless of portrait/landscape
-  const dim = Math.min(width, height);
-  
-  // Black background
-  background(255);  //Changed Background Color to White
-  
-    
-  // Draw a 'play' button
-  noStroke();
-  if (mic && mic.state === 'started') {
-    const diameter = dim * 0.2;
-    fill('tomato');
-    circle(width / 2, height / 2, diameter);
-    
-    noFill();
-    stroke('tomato');
-    const levelDiameter = map(meter.getLevel(), -100, -30, diameter, diameter * 3, true);
-    circle(width / 2, height / 2, levelDiameter);
-  } else {
-    fill(255);
-    polygon(width / 2, height / 2, dim * 0.1, 3);
-  }
-}
+  background('#F7D488');
+	
+	noStroke();
+	fill(255);
+	textSize(20);
+	text('USE THE MICROPHONE', 52, 30);
 
-async function mousePressed () {
-  if (mic) {
-    // stop recording
-    mic.dispose();
-    // Clear mic so we can create another on next click
-    mic = null;
-  } else {
-    // Create a new mic
-    mic = new Tone.UserMedia();
-    
-    // open it asks for user permission
-    await mic.open();
-    
-    console.log('Opened Microphone:', mic.label);
-    
-    // NOTE: Don't connect to Master unless you have headphones in!
-    // mic.connect(Tone.Master);
-    
-    // But you will want to connect it to analysers or meters
-    mic.connect(meter);
-  }
-}
+  // Obtiene el volumen (entre 0 y 1.0)
+  var volume = mic.getLevel();
+  
+	//redefine el rango de vol (entre 0 y 1.0) en el rango entre -> 50 y 400
 
-// Draw a basic polygon, handles triangles, squares, pentagons, etc
-function polygon(x, y, radius, sides = 3, angle = 0) {
-  beginShape();
-  for (let i = 0; i < sides; i++) {
-    const a = angle + TWO_PI * (i / sides);
-    let sx = x + cos(a) * radius;
-    let sy = y + sin(a) * radius;
-    vertex(sx, sy);
-  }
-  endShape(CLOSE);
+  var heightAux1 = map(volume*sensibility, 0, 1, 50,400);
+	// restringe el valor de h entre -> 25 y height -25
+	//var heightAux2 = constrain(heightAux1, 50 , height-25);
+	
+	noFill();
+	strokeWeight(heightAux1/8);
+	stroke('#A37B73');
+	ellipse(width/2, height/2 , 100+heightAux1/8, 100+heightAux1/8);
 }
