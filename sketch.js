@@ -7,7 +7,7 @@ var mic;
 var sensibility;
 
 function setup() {
-  createCanvas(320, 450);
+  createCanvas(windowWidth,windowHeight);
 
 	sensibility=4;
 	
@@ -23,7 +23,7 @@ function draw() {
 	noStroke();
 	fill(255);
 	textSize(20);
-	text('USE THE MICROPHONE', 52, 30);
+	// text('USE THE MICROPHONE', 52, 30);
 
   // Obtiene el volumen (entre 0 y 1.0)
   var volume = mic.getLevel();
