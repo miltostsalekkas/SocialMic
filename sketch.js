@@ -20,7 +20,8 @@ function draw() {
   const dim = Math.min(width, height);
   
   // Black background
-  background(0);
+  background(255);  //Changed Background Color to White
+  
     
   // Draw a 'play' button
   noStroke();
