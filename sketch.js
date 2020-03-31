@@ -77,9 +77,9 @@ function draw() {
         bgcolor = (Object.values(LocalData[i])[0].color.hex);
       }
     }
-    console.log(Positions[0].x,Positions[0].y);
+    // console.log(Positions[0].x,Positions[0].y);
 
-
+console
     if (GridInit && socket.id) {
 
       sendGrid(columnsNo, rowsNo);
