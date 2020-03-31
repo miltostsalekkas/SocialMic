@@ -6,7 +6,6 @@ var mic, fft;
 var sensibility;
 
 var LocalData;
-var LocalGridData;
 
 var bgcolor;
 
@@ -47,17 +46,9 @@ function setup() {
     // When we receive data
     function (data) {
       LocalData = data;
-      console.log(data);
     }
   );
 
-  socket.on('PublicGridData',
-    // When we receive data
-    function (data) {
-      LocalGridData = data;
-    
-    }
-  );
 
 
 }
@@ -83,7 +74,8 @@ function draw() {
 
   push();
 
-
+  var Microphones = [];
+  var Positions = [];
 
   for (var x = 0; x < columnsNo; x++) {
     for (var y = 0; y < rowsNo; y++) {
@@ -93,8 +85,8 @@ function draw() {
 
       square(FrameMargin + x * TileSize, FrameMargin + y * TileSize, TileSize * margin);
       push();
-      fill(214, 218, 255, heightAux2);
-      // square(FrameMargin + PixelEntry.x * TileSize, FrameMargin + PixelEntry.y* TileSize, TileSize * margin);
+      fill(214, 218, 255,Aux(Microphones[0]));
+       square(FrameMargin + Positions.x * TileSize, FrameMargin + Positions.y* TileSize, TileSize * margin);
       pop();
     }
   }
@@ -115,14 +107,23 @@ function draw() {
   pop();
 
 
-  if (LocalData != null && LocalData[socket.id] != null) {
+  if (LocalData != null) {
 
 
 
 
 
 
-    bgcolor = LocalData[socket.id].color.hex;
+    
+
+    for (var i = 0; i < LocalData.length; i++) {
+      Microphones.push(Object.values(LocalData[i])[0].Volume);
+      Positions.push(Object.values(LocalData[i])[0].position);
+      if (Object.keys(LocalData[i])[0] === socket.id) {
+        bgcolor = (Object.values(LocalData[i])[0].color.hex);
+      }
+    }
+    console.log(Positions);
   }
 
 
@@ -143,7 +144,10 @@ function draw() {
 
 
   var heightAux1 = map(volume * sensibility, 0, 1, 50, 400);
-  heightAux2 = map(volume * sensibility, 0, 1, 0, 100);
+  function Aux(volume){
+   var heightAux = map(volume * sensibility, 0, 1, 0, 100);
+   return heightAux;
+  }
 
   noFill();
   strokeWeight(heightAux1 / 8);

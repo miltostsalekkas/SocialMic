@@ -96,7 +96,7 @@ io.sockets.on('connection',
           for (var i = 0; i < IDs.length; i++) {
             if (data[IDs[i]] != null) {
               data[IDs[i]].color = color;
-              data[IDs[i]].position = AssisgnRandomPixel(data[IDs[i]].Grid.x, data[IDs[i]].Grid.y,[IDs[i]]);
+              data[IDs[i]].position = AssisgnRandomPixel(data[IDs[i]].Grid.x, data[IDs[i]].Grid.y, [IDs[i]]);
               PublicData[i] = { [IDs[i]]: data[IDs[i]] };
             }
           }
@@ -120,11 +120,13 @@ io.sockets.on('connection',
     });
   }
 );
-
+var lastIndex;
+var LastPixelEntry = { x: 0, y: 0 };
 function AssisgnRandomPixel(columnsNo, rowsNo, index) {
-  var lastIndex;
-  var LastPixelEntry ;
-  if (index !== lastIndex) {
+
+
+  if (JSON.stringify(index) !== JSON.stringify(lastIndex)) {
+
     var RPixelEntry = {
 
       x: Math.floor(Math.random() * columnsNo),
@@ -132,8 +134,8 @@ function AssisgnRandomPixel(columnsNo, rowsNo, index) {
 
     };
   }
-  else{
-    RPixelEntry =  LastPixelEntry;
+  else {
+    RPixelEntry = LastPixelEntry;
   }
   lastIndex = index;
   LastPixelEntry = RPixelEntry;
