@@ -59,6 +59,11 @@ function handleRequest(req, res) {
 var io = require('socket.io').listen(server);
 
 var Users = 0;
+var PixelPos = [0, 0];
+
+var PublicGridData;
+
+var IDs = [];
 
 // Register a callback function to run when we have an individual connection
 // This is run for each individual user that connects
@@ -74,33 +79,53 @@ io.sockets.on('connection',
 
     const color = colors[Math.floor(Math.random() * colors.length)];
 
+
+
+    IDs.push(socket.id);
+
+
+
     // When this user emits, client side: socket.emit('otherevent',some data);
     socket.on('mic',
       function (data) {
-        // Data comes in as whatever was sent, including objects
-        // console.log("Received: 'Mic' "+ data.Volume+ " from "+data.Id );
-
-        // Send it to all other clients
-        //  socket.broadcast.emit('mic', data);
 
 
-        var dataId = data.Id;
+        console.log(IDs[0]);
+        // console.log(data[IDs[0]]);
+
+
         var PublicData = {
-          UsersNo: Users,
-          [dataId]: {Volume: data.Volume,color: color}
+          // UsersNo: Users,
+          // [IDs]: {
+          //    Volume: data[IDs[0]].Volume, color: color,
+          // Position: { x: data[0].Grid.x, y: data[0].Grid.y }
+          // }
         };
 
 
-        // This is a way to send to everyone including sender
-        io.sockets.emit('mic', PublicData);
+        io.sockets.emit('PublicData', PublicData);
+        io.sockets.emit('PublicGridData', PublicGridData);
 
       }
     );
 
     socket.on('disconnect', function () {
+
+      IDs = IDs.filter(item => item !== socket.id);
       console.log("Client has disconnected");
       Users = Users - 1;
       console.log("Number of Users : " + Users);
     });
   }
 );
+
+function AssisgnRandomPixel(columnsNo, rowsNo) {
+  var RPixelEntry = {
+
+    x: Math.floor(Math.random() * columnsNo),
+    y: Math.floor(Math.random() * rowsNo)
+
+  };
+
+  return RPixelEntry;
+}
