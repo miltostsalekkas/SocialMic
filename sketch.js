@@ -64,30 +64,45 @@ function draw() {
   columnsNo = Math.floor((windowWidth - RightMargin) / TileSize);
   rowsNo = Math.floor((windowHeight - 2 * FrameMargin) / TileSize);
 
-  if (GridInit && socket.id) {
-
-    sendGrid(columnsNo, rowsNo);
-    GridInit = false;
-  }
-  var margin = 0.9;
+  if (LocalData != null) {
 
 
-  push();
+    var Microphones = [];
+    var Positions = [];
 
-  var Microphones = [];
-  var Positions = [];
+    for (var i = 0; i < LocalData.length; i++) {
+      Microphones.push(Object.values(LocalData[i])[0].Volume);
+      Positions.push(Object.values(LocalData[i])[0].position);
+      if (Object.keys(LocalData[i])[0] === socket.id) {
+        bgcolor = (Object.values(LocalData[i])[0].color.hex);
+      }
+    }
+    console.log(Positions[0].x,Positions[0].y);
 
-  for (var x = 0; x < columnsNo; x++) {
-    for (var y = 0; y < rowsNo; y++) {
 
-      noStroke();
-      fill(210, 210, 210);
+    if (GridInit && socket.id) {
 
-      square(FrameMargin + x * TileSize, FrameMargin + y * TileSize, TileSize * margin);
-      push();
-      fill(214, 218, 255,Aux(Microphones[0]));
-       square(FrameMargin + Positions.x * TileSize, FrameMargin + Positions.y* TileSize, TileSize * margin);
-      pop();
+      sendGrid(columnsNo, rowsNo);
+      GridInit = false;
+    }
+    var margin = 0.9;
+
+
+    push();
+
+
+    for (var x = 0; x < columnsNo; x++) {
+      for (var y = 0; y < rowsNo; y++) {
+
+        noStroke();
+        fill(210, 210, 210);
+
+        square(FrameMargin + x * TileSize, FrameMargin + y * TileSize, TileSize * margin);
+        push();
+        fill(214, 218, 255, Aux(Microphones[0]));
+        square(FrameMargin + Positions[0].x * TileSize, FrameMargin + Positions[0].y * TileSize, TileSize * margin);
+        pop();
+      }
     }
   }
   pop();
@@ -107,24 +122,7 @@ function draw() {
   pop();
 
 
-  if (LocalData != null) {
 
-
-
-
-
-
-    
-
-    for (var i = 0; i < LocalData.length; i++) {
-      Microphones.push(Object.values(LocalData[i])[0].Volume);
-      Positions.push(Object.values(LocalData[i])[0].position);
-      if (Object.keys(LocalData[i])[0] === socket.id) {
-        bgcolor = (Object.values(LocalData[i])[0].color.hex);
-      }
-    }
-    console.log(Positions);
-  }
 
 
 
@@ -144,9 +142,9 @@ function draw() {
 
 
   var heightAux1 = map(volume * sensibility, 0, 1, 50, 400);
-  function Aux(volume){
-   var heightAux = map(volume * sensibility, 0, 1, 0, 100);
-   return heightAux;
+  function Aux(volume) {
+    var heightAux = map(volume * sensibility, 0, 1, 0, 100);
+    return heightAux;
   }
 
   noFill();
