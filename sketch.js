@@ -105,7 +105,7 @@ function draw() {
       }
     }
   }
-  pop();
+ 
   push();
   noStroke();
   fill(246, 246, 246);
@@ -143,7 +143,7 @@ function draw() {
 
   var heightAux1 = map(volume * sensibility, 0, 1, 50, 400);
   function Aux(volume) {
-    var heightAux = map(volume * sensibility, 0, 1, 0, 100);
+    var heightAux = map(volume * sensibility, 0.1, 1, 0, 300);
     return heightAux;
   }
 
