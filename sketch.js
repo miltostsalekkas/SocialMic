@@ -28,7 +28,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   bgcolor = color(255);
 
-  socket = io.connect('https://localhost:8080');
+  socket = io.connect('http://localhost:8080');
 
   sensibility = 4;
 
